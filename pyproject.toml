@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "inels-mqtt-wrapper"
+version = "0.1.0"
+description = "A Python library to work with Inels devices over MQTT (using Asyncio)"
+authors = ["arseniiarsenii <arseniivelichko2@gmail.com>"]
+readme = "README.md"
+packages = [{include = "inels_mqtt_wrapper"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+asyncio-mqtt = "^0.13.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^2.20.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
