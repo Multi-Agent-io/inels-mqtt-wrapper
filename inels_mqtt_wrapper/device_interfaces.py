@@ -2,13 +2,21 @@ from .interface import AbstractDeviceSupportsSet, AbstractDeviceSupportsStatus, 
 
 
 # TODO: Implement device interface
-class DeviceInterface02(AbstractDeviceInterface):
+class DeviceInterface02(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet):
     device_type: str = "02"
+
+    @staticmethod
+    def _decode_status(raw_status_data: bytearray) -> StatusDataType:
+        raise NotImplementedError  # TODO: Implement _decode_status() method for class DeviceInterface02
 
 
 # TODO: Implement device interface
-class DeviceInterface03(AbstractDeviceInterface):
+class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet):
     device_type: str = "03"
+
+    @staticmethod
+    def _decode_status(raw_status_data: bytearray) -> StatusDataType:
+        raise NotImplementedError  # TODO: Implement _decode_status() method for class DeviceInterface03
 
 
 class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet):
@@ -76,20 +84,36 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
 
 
 # TODO: Implement device interface
-class DeviceInterface09(AbstractDeviceInterface):
+class DeviceInterface09(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet):
     device_type: str = "09"
 
+    @staticmethod
+    def _decode_status(raw_status_data: bytearray) -> StatusDataType:
+        raise NotImplementedError  # TODO: Implement _decode_status() method for class DeviceInterface09
+
 
 # TODO: Implement device interface
-class DeviceInterface10(AbstractDeviceInterface):
+class DeviceInterface10(AbstractDeviceSupportsStatus):
     device_type: str = "10"
 
+    @staticmethod
+    def _decode_status(raw_status_data: bytearray) -> StatusDataType:
+        raise NotImplementedError  # TODO: Implement _decode_status() method for class DeviceInterface10
+
 
 # TODO: Implement device interface
-class DeviceInterface12(AbstractDeviceInterface):
+class DeviceInterface12(AbstractDeviceSupportsStatus):
     device_type: str = "12"
 
+    @staticmethod
+    def _decode_status(raw_status_data: bytearray) -> StatusDataType:
+        raise NotImplementedError  # TODO: Implement _decode_status() method for class DeviceInterface12
+
 
 # TODO: Implement device interface
-class DeviceInterface19(AbstractDeviceInterface):
+class DeviceInterface19(AbstractDeviceSupportsStatus):
     device_type: str = "19"
+
+    @staticmethod
+    def _decode_status(raw_status_data: bytearray) -> StatusDataType:
+        raise NotImplementedError  # TODO: Implement _decode_status() method for class DeviceInterface19
