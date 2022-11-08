@@ -34,7 +34,7 @@ class AbstractDeviceInterface:
         """
         client = self._mqtt_client
 
-        async with client.unfiltered_messages() as messages:
+        async with client.filtered_messages(self._connected_topic_name) as messages:
             await client.subscribe(self._connected_topic_name)
             async for message in messages:
                 device_is_connected = bool(message.payload)
@@ -78,7 +78,7 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
         """
         client = self._mqtt_client
 
-        async with client.unfiltered_messages() as messages:
+        async with client.filtered_messages(self._status_topic_name) as messages:
             await client.subscribe(self._status_topic_name)
             async for message in messages:
                 raw_status_data: bytearray = message.payload
