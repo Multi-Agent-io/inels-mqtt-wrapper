@@ -71,15 +71,10 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
         raise NotImplementedError
 
 
-class AbstractDeviceSupportsSet(AbstractDeviceInterface, ABC):
+class AbstractDeviceSupportsSet(AbstractDeviceInterface):
     async def _publish_to_set_topic(self, payload: bytearray) -> None:
         client = self._mqtt_client
         await client.publish(
             topic=self._set_topic_name,
             payload=payload,
         )
-
-    @staticmethod
-    @abstractmethod
-    def _encode_set_message(*args, **kwargs) -> bytearray:
-        raise NotImplementedError
