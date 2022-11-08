@@ -1,7 +1,6 @@
 from ..interface import AbstractDeviceSupportsStatus, StatusDataType
 
 
-# TODO: Implement device interface
 class DeviceInterface12(AbstractDeviceSupportsStatus):
     """A base class for all the devices implementing the 'device type 12' interface"""
 
@@ -9,4 +8,9 @@ class DeviceInterface12(AbstractDeviceSupportsStatus):
 
     @staticmethod
     def _decode_status(raw_status_data: bytearray) -> StatusDataType:
-        raise NotImplementedError  # TODO: Implement _decode_status() method for class DeviceInterface12
+        data_0, data_1, data_2, data_3, data_4 = raw_status_data
+        return {
+            "battery_low": data_2 % 16 == 1,
+            "rftc_status": "RFTC is switched to eLAN mode" if bytes(data_2) == b"\x80" else None,
+            "temperature": data_0 * 0.5,
+        }
