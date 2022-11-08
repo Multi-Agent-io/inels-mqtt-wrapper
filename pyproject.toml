@@ -5,6 +5,9 @@ description = "A Python library to work with Inels devices over MQTT (using Asyn
 authors = ["arseniiarsenii <arseniivelichko2@gmail.com>"]
 readme = "README.md"
 packages = [{include = "inels_mqtt_wrapper"}]
+homepage = "https://github.com/Multi-Agent-io/inels-mqtt-wrapper"
+license = "Apache 2.0"
+
 
 [tool.poetry.dependencies]
 python = "^3.8"
