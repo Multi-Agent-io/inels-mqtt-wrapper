@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 
 import asyncio_mqtt as aiomqtt
 
-from .exceptions import DeviceStatusUnknownError
+from .exceptions import DeviceDisconnectedError, DeviceStatusUnknownError
 
 
 class AbstractDeviceInterface:
@@ -105,6 +105,12 @@ class AbstractDeviceSupportsSet(AbstractDeviceInterface):
         :param payload: A bytearray object containing the bytes to be published
         :return: No return
         """
+        if not self.is_connected:
+            raise DeviceDisconnectedError(
+                f"Device '{self.__class__.__name__}' is disconnected. "
+                "Cannot publish new messages to the device's set topic unless the device is connected"
+            )
+
         client = self._mqtt_client
         await client.publish(
             topic=self._set_topic_name,
