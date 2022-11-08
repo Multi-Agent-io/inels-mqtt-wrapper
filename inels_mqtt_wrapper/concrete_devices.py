@@ -1,4 +1,4 @@
-from .device_interfaces import (
+from . import (
     DeviceInterface02,
     DeviceInterface03,
     DeviceInterface05,

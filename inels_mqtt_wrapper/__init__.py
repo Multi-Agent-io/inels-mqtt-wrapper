@@ -1,3 +1,12 @@
+from ._device_interfaces import (
+    DeviceInterface02,
+    DeviceInterface03,
+    DeviceInterface05,
+    DeviceInterface09,
+    DeviceInterface10,
+    DeviceInterface12,
+    DeviceInterface19,
+)
 from .concrete_devices import (
     RFATV2,
     RFDAC71B,
@@ -10,15 +19,6 @@ from .concrete_devices import (
     RFSC61,
     RFTC10G,
     RFTI10B,
-)
-from .device_interfaces import (
-    DeviceInterface02,
-    DeviceInterface03,
-    DeviceInterface05,
-    DeviceInterface09,
-    DeviceInterface10,
-    DeviceInterface12,
-    DeviceInterface19,
 )
 from .exceptions import DeviceDisconnectedError, DeviceStatusUnknownError
 from .interface import AbstractDeviceInterface, AbstractDeviceSupportsSet, AbstractDeviceSupportsStatus
