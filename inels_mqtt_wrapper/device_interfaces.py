@@ -3,6 +3,8 @@ from .interface import AbstractDeviceSupportsSet, AbstractDeviceSupportsStatus, 
 
 # TODO: Implement device interface
 class DeviceInterface02(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet):
+    """A base class for all the devices implementing the 'device type 02' interface"""
+
     device_type: str = "02"
 
     @staticmethod
@@ -12,6 +14,8 @@ class DeviceInterface02(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
 
 # TODO: Implement device interface
 class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet):
+    """A base class for all the devices implementing the 'device type 03' interface"""
+
     device_type: str = "03"
 
     @staticmethod
@@ -20,25 +24,50 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
 
 
 class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet):
+    """A base class for all the devices implementing the 'device type 05' interface"""
+
     device_type: str = "05"
 
     @staticmethod
     def _decode_status(raw_status_data: bytearray) -> StatusDataType:
+        """
+        A method for decoding the device's status from bytes.
+        :param raw_status_data: A bytearray object containing the bytes, published by the device in the topic.
+        :return: A device-specific dict, containing its status. For this device:
+            {"brightness_percentage": 100}
+        """
         raw_value = 0xFFFF - int.from_bytes(raw_status_data, byteorder="big")
         brightness_percentage = int((raw_value - 10000) / 1000 * 5)
         return {"brightness_percentage": brightness_percentage}
 
     @staticmethod
     def _encode_brightness(brightness: int) -> bytes:
+        """
+        Encode the brightness percentage data into bytes, accepted by the device.
+        :param brightness: The desired brightness percentage value.
+            Brightness percentage must be an integer between 0 and 100 increased in 10% steps.
+        :return: Bytes data, accepted by the device
+        """
         out_real = 0xFFFF - (brightness / 5 * 1000 + 10000)
         return int(out_real).to_bytes(length=2, byteorder="big")
 
     @staticmethod
     def _encode_ramp_time(ramp_time_duration_sec: int) -> bytes:
+        """
+        Encode the ramp up / ramp down duration into bytes, accepted by the device.
+        :param ramp_time_duration_sec: The desired ramp up / ramp down duration in seconds.
+        :return: Bytes data, accepted by the device
+        """
         out_real = ramp_time_duration_sec / 0.065
         return int(out_real).to_bytes(length=2, byteorder="big")
 
     async def set_brightness_percentage(self, brightness_percentage: int) -> None:
+        """
+        Set the device's desired brightness percentage.
+        :param brightness_percentage: The desired brightness percentage value.
+            Brightness percentage must be an integer between 0 and 100 increased in 10% steps.
+        :return: No return
+        """
         assert brightness_percentage in range(
             0, 110, 10
         ), "Brightness percentage must be an integer between 0 and 100 increased in 10% steps"
@@ -50,16 +79,29 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         await self._publish_to_set_topic(payload)
 
     async def ramp_up(self) -> None:
+        """
+        Execute the device's 'ramp up' command.
+        :return: No return
+        """
         data_0 = b"\x02"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
 
     async def without_function(self) -> None:
+        """
+        Execute the device's 'without function' command.
+        :return: No return
+        """
         data_0 = b"\x04"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
 
     async def set_ramp_up_time_seconds(self, ramp_duration_seconds: int) -> None:
+        """
+        Set the device's desired ramp up time.
+        :param ramp_duration_seconds: The desired duration of the ramp up in seconds.
+        :return: No return
+        """
         assert ramp_duration_seconds >= 0, "Ramp duration must be an integer greater or equal to zero"
         data_0 = b"\x05"
         payload = bytearray(data_0)
@@ -69,6 +111,11 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         await self._publish_to_set_topic(payload)
 
     async def set_ramp_down_time_seconds(self, ramp_duration_seconds: int) -> None:
+        """
+        Set the device's desired ramp down time.
+        :param ramp_duration_seconds: The desired duration of the ramp down in seconds.
+        :return: No return
+        """
         assert ramp_duration_seconds >= 0, "Ramp duration must be an integer greater or equal to zero"
         data_0 = b"\x06"
         payload = bytearray(data_0)
@@ -78,6 +125,10 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         await self._publish_to_set_topic(payload)
 
     async def test_communication(self) -> None:
+        """
+        Execute the device's 'test communication' command.
+        :return: No return
+        """
         data_0 = b"\x07"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
@@ -85,6 +136,8 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
 
 # TODO: Implement device interface
 class DeviceInterface09(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet):
+    """A base class for all the devices implementing the 'device type 09' interface"""
+
     device_type: str = "09"
 
     @staticmethod
@@ -94,6 +147,8 @@ class DeviceInterface09(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
 
 # TODO: Implement device interface
 class DeviceInterface10(AbstractDeviceSupportsStatus):
+    """A base class for all the devices implementing the 'device type 10' interface"""
+
     device_type: str = "10"
 
     @staticmethod
@@ -103,6 +158,8 @@ class DeviceInterface10(AbstractDeviceSupportsStatus):
 
 # TODO: Implement device interface
 class DeviceInterface12(AbstractDeviceSupportsStatus):
+    """A base class for all the devices implementing the 'device type 12' interface"""
+
     device_type: str = "12"
 
     @staticmethod
@@ -112,6 +169,8 @@ class DeviceInterface12(AbstractDeviceSupportsStatus):
 
 # TODO: Implement device interface
 class DeviceInterface19(AbstractDeviceSupportsStatus):
+    """A base class for all the devices implementing the 'device type 19' interface"""
+
     device_type: str = "19"
 
     @staticmethod
