@@ -7,7 +7,7 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     device_type: str = "05"
 
     @staticmethod
-    def _decode_status(raw_status_data: bytearray) -> StatusDataType:
+    def _decode_status(raw_status_data: bytearray) -> StatusDataType:  # TODO: Testing required
         """
         A method for decoding the device's status from bytes.
         :param raw_status_data: A bytearray object containing the bytes, published by the device in the topic.
@@ -39,7 +39,7 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         out_real = ramp_time_duration_sec / 0.065
         return int(out_real).to_bytes(length=2, byteorder="big")
 
-    async def set_brightness_percentage(self, brightness_percentage: int) -> None:
+    async def set_brightness_percentage(self, brightness_percentage: int) -> None:  # TODO: Testing required
         """
         Set the device's desired brightness percentage.
         :param brightness_percentage: The desired brightness percentage value.
@@ -56,7 +56,7 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         assert len(payload) == 3
         await self._publish_to_set_topic(payload)
 
-    async def ramp_up(self) -> None:
+    async def ramp_up(self) -> None:  # TODO: Testing required
         """
         Execute the device's 'ramp up' command.
         :return: No return
@@ -65,7 +65,7 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
 
-    async def without_function(self) -> None:
+    async def without_function(self) -> None:  # TODO: Testing required
         """
         Execute the device's 'without function' command.
         :return: No return
@@ -74,7 +74,7 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
 
-    async def set_ramp_up_time_seconds(self, ramp_duration_seconds: int) -> None:
+    async def set_ramp_up_time_seconds(self, ramp_duration_seconds: int) -> None:  # TODO: Testing required
         """
         Set the device's desired ramp up time.
         :param ramp_duration_seconds: The desired duration of the ramp up in seconds.
@@ -88,7 +88,7 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         assert len(payload) == 3
         await self._publish_to_set_topic(payload)
 
-    async def set_ramp_down_time_seconds(self, ramp_duration_seconds: int) -> None:
+    async def set_ramp_down_time_seconds(self, ramp_duration_seconds: int) -> None:  # TODO: Testing required
         """
         Set the device's desired ramp down time.
         :param ramp_duration_seconds: The desired duration of the ramp down in seconds.
@@ -102,7 +102,7 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         assert len(payload) == 3
         await self._publish_to_set_topic(payload)
 
-    async def test_communication(self) -> None:
+    async def test_communication(self) -> None:  # TODO: Testing required
         """
         Execute the device's 'test communication' command.
         :return: No return

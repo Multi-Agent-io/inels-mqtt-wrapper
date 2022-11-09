@@ -7,7 +7,7 @@ class DeviceInterface10(AbstractDeviceSupportsStatus):
     device_type: str = "10"
 
     @staticmethod
-    def _decode_status(raw_status_data: bytearray) -> StatusDataType:
+    def _decode_status(raw_status_data: bytearray) -> StatusDataType:  # TODO: Testing required
         data_0, data_2, data_3, data_4, data_5 = raw_status_data
         temperature_in = int.from_bytes(bytearray((data_2, data_3)), byteorder="little", signed=True) / 100
         temperature_out = int.from_bytes(bytearray((data_4, data_5)), byteorder="little", signed=True) / 100

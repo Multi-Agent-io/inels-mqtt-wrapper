@@ -2,6 +2,7 @@ from ..interface import AbstractDeviceSupportsSet, AbstractDeviceSupportsStatus,
 
 
 # TODO: Implement device interface
+# TODO: Cannot implement the public 'set' interface - specification unclear
 class DeviceInterface09(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet):
     """A base class for all the devices implementing the 'device type 09' interface"""
 

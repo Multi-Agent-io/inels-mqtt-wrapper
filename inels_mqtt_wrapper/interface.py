@@ -6,6 +6,8 @@ import asyncio_mqtt as aiomqtt
 
 from .exceptions import DeviceDisconnectedError, DeviceStatusUnknownError
 
+# TODO: Add logging throughout the library
+
 
 class AbstractDeviceInterface:
     """A base class for all the device interfaces"""

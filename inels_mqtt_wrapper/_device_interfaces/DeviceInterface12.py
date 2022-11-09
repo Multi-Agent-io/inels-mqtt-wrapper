@@ -7,7 +7,7 @@ class DeviceInterface12(AbstractDeviceSupportsStatus):
     device_type: str = "12"
 
     @staticmethod
-    def _decode_status(raw_status_data: bytearray) -> StatusDataType:
+    def _decode_status(raw_status_data: bytearray) -> StatusDataType:  # TODO: Testing required
         data_0, data_1, data_2, data_3, data_4 = raw_status_data
         return {
             "battery_low": data_2 % 16 == 1,
