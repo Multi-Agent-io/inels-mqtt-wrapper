@@ -23,7 +23,7 @@ class DeviceInterface19(AbstractDeviceSupportsStatus):
         """
         data_0, data_1, data_2, data_3, data_4 = raw_status_data
         button_codes = {1: 1, 2: 2, 3: 4, 4: 8}
-        bits = extract_bits(data_0,target_len=8)
+        bits = extract_bits(data_0, target_len=8)
         bit_7, bit_6, bit_5, bit_4, bit_3, bit_2, bit_1, bit_0 = bits
         return {
             "learn_mode_on": bool(bit_7),
