@@ -1,7 +1,6 @@
 from ..interface import AbstractDeviceSupportsSet, AbstractDeviceSupportsStatus, StatusDataType
 
 
-# TODO: Implement device interface
 class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet):
     """A base class for all the devices implementing the 'device type 03' interface"""
 
