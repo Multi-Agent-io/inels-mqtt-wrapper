@@ -11,6 +11,7 @@ class DeviceInterface19(AbstractDeviceSupportsStatus):
     def _decode_status(raw_status_data: bytearray) -> StatusDataType:  # TODO: Testing required
         """
         A method for decoding the device's status from bytes.
+
         :param raw_status_data: A bytearray object containing the bytes, published by the device in the topic.
         :return: A device-specific dict, containing its status. For this device:
             {

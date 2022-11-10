@@ -10,6 +10,7 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     def _decode_status(raw_status_data: bytearray) -> StatusDataType:  # TODO: Testing required
         """
         A method for decoding the device's status from bytes.
+
         :param raw_status_data: A bytearray object containing the bytes, published by the device in the topic.
         :return: A device-specific dict, containing its status. For this device:
             {"unit_id": 3, "shutters_are_up": True, "shutters_are_down": False}
@@ -24,7 +25,8 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def immediately_pull_up_the_shutters(self) -> None:  # TODO: Testing required
         """
         Immediately pulls up the shutters
-        :return: No return
+
+        :return: None
         """
         data_0 = b"\x01"
         payload = bytearray(data_0)
@@ -33,7 +35,8 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def immediately_pull_down_the_shutters(self) -> None:  # TODO: Testing required
         """
         Immediately pulls down the shutters
-        :return: No return
+
+        :return: None
         """
         data_0 = b"\x02"
         payload = bytearray(data_0)
@@ -42,7 +45,8 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def start_shutters_up(self) -> None:  # TODO: Testing required
         """
         Starts pulling the shutters up
-        :return: No return
+
+        :return: None
         """
         data_0 = b"\x03"
         payload = bytearray(data_0)
@@ -51,7 +55,8 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def stop_shutters_up(self) -> None:  # TODO: Testing required
         """
         Stops pulling the shutters up
-        :return: No return
+
+        :return: None
         """
         data_0 = b"\x04"
         payload = bytearray(data_0)
@@ -60,7 +65,8 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def start_shutters_down(self) -> None:  # TODO: Testing required
         """
         Starts pulling the shutters down
-        :return: No return
+
+        :return: None
         """
         data_0 = b"\x05"
         payload = bytearray(data_0)
@@ -69,7 +75,8 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def stop_shutters_down(self) -> None:  # TODO: Testing required
         """
         Stops pulling the shutters down
-        :return: No return
+
+        :return: None
         """
         data_0 = b"\x06"
         payload = bytearray(data_0)
@@ -78,7 +85,8 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def test_communication(self) -> None:  # TODO: Testing required
         """
         Execute the device's 'test communication' command.
-        :return: No return
+
+        :return: None
         """
         data_0 = b"\x09"
         payload = bytearray(data_0)
@@ -88,8 +96,9 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     def _encode_time(time_seconds_int: int) -> bytes:
         """
         Encode the time in seconds to get the byte value accepted by the device
+
         :param time_seconds_int: A time value in seconds to be encoded
-        :return: No return
+        :return: None
         """
         assert time_seconds_int >= 0, "A value must by greater or equal to zero"
         out_value = int(time_seconds_int / 0.06577)
@@ -98,8 +107,9 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def set_shutter_up_time(self, time_seconds: int) -> None:  # TODO: Testing required
         """
         Setting the time when the shutters pull up
+
         :param time_seconds: A time in seconds when the shutters will be pulled up
-        :return: No return
+        :return: None
         """
         data_0 = b"\x07"
         raw_time_data = self._encode_time(time_seconds)
@@ -110,8 +120,9 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def set_shutter_down_time(self, time_seconds: int) -> None:  # TODO: Testing required
         """
         Setting the time when the shutters pull down
+
         :param time_seconds: A time in seconds when the shutters will be pulled down
-        :return: No return
+        :return: None
         """
         data_0 = b"\x08"
         raw_time_data = self._encode_time(time_seconds)

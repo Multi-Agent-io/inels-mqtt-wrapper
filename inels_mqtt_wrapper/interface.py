@@ -32,7 +32,8 @@ class AbstractDeviceInterface:
         """
         A task for subscribing to the device's 'connected' MQTT topic
         and updating its 'is_connected' field accordingly
-        :return: No return
+
+        :return: None
         """
         client = self._mqtt_client
 
@@ -68,7 +69,8 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
         in the docstring of the concrete implementation's _decode_status() method.
 
         Raises DeviceStatusUnknownError if the device's last status is unknown.
-        :return: No return
+
+        :return: None
         """
         if self._last_known_status is None:
             raise DeviceStatusUnknownError(f"Unknown device status for device {self.__class__.__name__}")
@@ -78,7 +80,8 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
         """
         A task for subscribing to the device's 'status' MQTT topic
         and updating its '_last_known_status' field accordingly.
-        :return: No return
+
+        :return: None
         """
         client = self._mqtt_client
 
@@ -94,6 +97,7 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
     def _decode_status(raw_status_data: bytearray) -> StatusDataType:
         """
         An abstract method for decoding the device's status from bytes.
+
         :param raw_status_data: A bytearray object containing the bytes, published by the device in the topic.
         :return: Decoded device status as a dictionary with device-specific keys.
         """
@@ -106,8 +110,9 @@ class AbstractDeviceSupportsSet(AbstractDeviceInterface):
     async def _publish_to_set_topic(self, payload: bytearray) -> None:
         """
         A method for publishing the provided payload to the device's 'set' MQTT topic.
+
         :param payload: A bytearray object containing the bytes to be published
-        :return: No return
+        :return: None
         """
         if not self.is_connected:
             raise DeviceDisconnectedError(

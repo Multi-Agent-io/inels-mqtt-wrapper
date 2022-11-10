@@ -10,6 +10,7 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     def _decode_status(raw_status_data: bytearray) -> StatusDataType:  # TODO: Testing required
         """
         A method for decoding the device's status from bytes.
+
         :param raw_status_data: A bytearray object containing the bytes, published by the device in the topic.
         :return: A device-specific dict, containing its status. For this device:
             {"brightness_percentage": 100}
@@ -22,6 +23,7 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     def _encode_brightness(brightness: int) -> bytes:
         """
         Encode the brightness percentage data into bytes, accepted by the device.
+
         :param brightness: The desired brightness percentage value.
             Brightness percentage must be an integer between 0 and 100 increased in 10% steps.
         :return: Bytes data, accepted by the device
@@ -33,6 +35,7 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     def _encode_ramp_time(ramp_time_duration_sec: int) -> bytes:
         """
         Encode the ramp up / ramp down duration into bytes, accepted by the device.
+
         :param ramp_time_duration_sec: The desired ramp up / ramp down duration in seconds.
         :return: Bytes data, accepted by the device
         """
@@ -42,9 +45,10 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def set_brightness_percentage(self, brightness_percentage: int) -> None:  # TODO: Testing required
         """
         Set the device's desired brightness percentage.
+
         :param brightness_percentage: The desired brightness percentage value.
             Brightness percentage must be an integer between 0 and 100 increased in 10% steps.
-        :return: No return
+        :return: None
         """
         assert brightness_percentage in range(
             0, 110, 10
@@ -59,7 +63,8 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def ramp_up(self) -> None:  # TODO: Testing required
         """
         Execute the device's 'ramp up' command.
-        :return: No return
+
+        :return: None
         """
         data_0 = b"\x02"
         payload = bytearray(data_0)
@@ -68,7 +73,8 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def without_function(self) -> None:  # TODO: Testing required
         """
         Execute the device's 'without function' command.
-        :return: No return
+
+        :return: None
         """
         data_0 = b"\x04"
         payload = bytearray(data_0)
@@ -77,8 +83,9 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def set_ramp_up_time_seconds(self, ramp_duration_seconds: int) -> None:  # TODO: Testing required
         """
         Set the device's desired ramp up time.
+
         :param ramp_duration_seconds: The desired duration of the ramp up in seconds.
-        :return: No return
+        :return: None
         """
         assert ramp_duration_seconds >= 0, "Ramp duration must be an integer greater or equal to zero"
         data_0 = b"\x05"
@@ -91,8 +98,9 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def set_ramp_down_time_seconds(self, ramp_duration_seconds: int) -> None:  # TODO: Testing required
         """
         Set the device's desired ramp down time.
+
         :param ramp_duration_seconds: The desired duration of the ramp down in seconds.
-        :return: No return
+        :return: None
         """
         assert ramp_duration_seconds >= 0, "Ramp duration must be an integer greater or equal to zero"
         data_0 = b"\x06"
@@ -105,7 +113,8 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     async def test_communication(self) -> None:  # TODO: Testing required
         """
         Execute the device's 'test communication' command.
-        :return: No return
+
+        :return: None
         """
         data_0 = b"\x07"
         payload = bytearray(data_0)

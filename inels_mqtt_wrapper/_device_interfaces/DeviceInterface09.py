@@ -43,7 +43,7 @@ class DeviceInterface09(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
 
         :param interval_sec: The communication interval with the gateway
             in seconds. Must be a multiple of 70. Defaults to 350.
-        :return: No return
+        :return: None
         """
         assert interval_sec >= 70, "The communication interval cannot be less than 70 seconds"
         assert interval_sec % 70 == 0 and interval_sec, "The communication interval must be a multiple of 70"
@@ -62,7 +62,7 @@ class DeviceInterface09(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
 
         :param required_temperature_c: The desired room temperature in degrees C.
             Must be a multiple of 0.5.
-        :return: No return.
+        :return: None.
         """
         assert required_temperature_c > 0, "The required temperature must be more than 0"
         assert not required_temperature_c % 0.5, "The required temperature must be a multiple of 0.5"
@@ -92,7 +92,7 @@ class DeviceInterface09(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         :param duration_min: The 'Open window' feature duration in minutes.
             The duration must be a multiple of 10 between 0 and 60.
             Value 0 disables the feature.
-        :return: No return
+        :return: None
         """
         duration_options = {
             0: b"000",
