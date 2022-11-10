@@ -63,7 +63,9 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
     @property
     def status(self) -> StatusDataType:
         """
-        A property for getting the last known device status as a dictionary with device-specific keys.
+        A property for getting the last known device status as a dictionary with
+        device-specific keys. Example of the device-specific status dict can be found
+        in the docstring of the concrete implementation's _decode_status() method.
 
         Raises DeviceStatusUnknownError if the device's last status is unknown.
         :return: No return
