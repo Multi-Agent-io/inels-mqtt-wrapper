@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "inels-mqtt-wrapper"
-version = "0.3.0"
+version = "0.3.1"
 description = "A Python library to work with Inels devices over MQTT (using Asyncio)"
 authors = ["arseniiarsenii <arseniivelichko2@gmail.com>"]
 readme = "README.md"
