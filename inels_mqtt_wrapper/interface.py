@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import re
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
@@ -71,8 +72,24 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
         )
 
         self._last_known_status: Optional[StatusDataType] = None
+        self._status_updated_event: asyncio.Event = asyncio.Event()
 
         asyncio.create_task(self._listen_on_status_topic())
+
+    async def await_state_change(self, timeout_sec: int = 10) -> bool:
+        """
+        Wait for a status update to occur within the timeout period.
+        Exits returning True immediately as the state change has been
+        detected, exits returning False if the given time ran out.
+
+        :param timeout_sec: Timeout duration in seconds. Defaults to 10s
+        :return: True if the state change occurred, False if it timed out
+        """
+        if self._status_updated_event.is_set():
+            self._status_updated_event.clear()
+        with contextlib.suppress(asyncio.TimeoutError):
+            await asyncio.wait_for(self._status_updated_event.wait(), timeout_sec)
+        return self._status_updated_event.is_set()
 
     @property
     def status(self) -> StatusDataType:
@@ -104,6 +121,7 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
                 raw_status_data: bytearray = message.payload
                 decoded_status = self._decode_status(raw_status_data)
                 self._last_known_status = decoded_status
+                self._status_updated_event.set()
 
     @staticmethod
     @abstractmethod
