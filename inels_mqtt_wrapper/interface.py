@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, Optional
 import asyncio_mqtt as aiomqtt
 
 from ._logging import logger
-from .exceptions import DeviceDisconnectedError, DeviceStatusUnknownError
+from .exceptions import DeviceStatusUnknownError
 
 # TODO: Add logging throughout the library
 
@@ -193,12 +193,6 @@ class AbstractDeviceSupportsSet(AbstractDeviceInterface):
         :param payload: A bytearray object containing the bytes to be published
         :return: None
         """
-        if not self.is_connected:
-            raise DeviceDisconnectedError(
-                f"Device '{self.__class__.__name__}' is disconnected. "
-                "Cannot publish new messages to the device's set topic unless the device is connected"
-            )
-
         client = self._mqtt_client
         await client.publish(
             topic=self._set_topic_name,
