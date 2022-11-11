@@ -6,6 +6,7 @@ from typing import Any, Dict, Optional
 
 import asyncio_mqtt as aiomqtt
 
+from ._logging import logger
 from .exceptions import DeviceDisconnectedError, DeviceStatusUnknownError
 
 # TODO: Add logging throughout the library
@@ -89,7 +90,11 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
             self._status_updated_event.clear()
         with contextlib.suppress(asyncio.TimeoutError):
             await asyncio.wait_for(self._status_updated_event.wait(), timeout_sec)
-        return self._status_updated_event.is_set()
+        if state_changed := self._status_updated_event.is_set():
+            logger.debug(f"State change received on device {self.dev_id}")
+        else:
+            logger.warning(f"State change await timed out in {timeout_sec}s")
+        return state_changed
 
     @property
     def status(self) -> StatusDataType:
@@ -156,3 +161,4 @@ class AbstractDeviceSupportsSet(AbstractDeviceInterface):
             topic=self._set_topic_name,
             payload=payload,
         )
+        logger.debug(f"Payload {payload} published to the MQTT topic {self._set_topic_name}")
