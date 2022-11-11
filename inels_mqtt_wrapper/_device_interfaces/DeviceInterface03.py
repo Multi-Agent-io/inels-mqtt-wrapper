@@ -1,3 +1,4 @@
+from .._logging import logger
 from ..interface import AbstractDeviceSupportsSet, AbstractDeviceSupportsStatus, StatusDataType
 
 
@@ -31,6 +32,7 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         data_0 = b"\x01"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
+        logger.info(f"Command to immediately pull up the shutters sent to the device {self.dev_id}")
 
     async def immediately_pull_down_the_shutters(self) -> None:  # TODO: Testing required
         """
@@ -41,6 +43,7 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         data_0 = b"\x02"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
+        logger.info(f"Command to immediately pull down the shutters sent to the device {self.dev_id}")
 
     async def start_shutters_up(self) -> None:  # TODO: Testing required
         """
@@ -51,6 +54,7 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         data_0 = b"\x03"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
+        logger.info(f"Command to start pulling up the shutters sent to the device {self.dev_id}")
 
     async def stop_shutters_up(self) -> None:  # TODO: Testing required
         """
@@ -61,6 +65,7 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         data_0 = b"\x04"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
+        logger.info(f"Command to stop pulling up the shutters sent to the device {self.dev_id}")
 
     async def start_shutters_down(self) -> None:  # TODO: Testing required
         """
@@ -71,6 +76,7 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         data_0 = b"\x05"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
+        logger.info(f"Command to start pulling down the shutters sent to the device {self.dev_id}")
 
     async def stop_shutters_down(self) -> None:  # TODO: Testing required
         """
@@ -81,6 +87,7 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         data_0 = b"\x06"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
+        logger.info(f"Command to stop pulling down the shutters sent to the device {self.dev_id}")
 
     async def test_communication(self) -> None:  # TODO: Testing required
         """
@@ -91,6 +98,7 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         data_0 = b"\x09"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
+        logger.info(f"Test communication command sent to the device {self.dev_id}")
 
     @staticmethod
     def _encode_time(time_seconds_int: int) -> bytes:
@@ -116,6 +124,7 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         payload = bytearray(data_0)
         payload.extend(bytearray(raw_time_data))
         await self._publish_to_set_topic(payload)
+        logger.info(f"Shutter up time set to {time_seconds}s on the device {self.dev_id}")
 
     async def set_shutter_down_time(self, time_seconds: int) -> None:  # TODO: Testing required
         """
@@ -129,3 +138,4 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         payload = bytearray(data_0)
         payload.extend(bytearray(raw_time_data))
         await self._publish_to_set_topic(payload)
+        logger.info(f"Shutter down time set to {time_seconds}s on the device {self.dev_id}")

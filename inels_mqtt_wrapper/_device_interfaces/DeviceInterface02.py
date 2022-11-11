@@ -1,3 +1,4 @@
+from .._logging import logger
 from ..interface import AbstractDeviceSupportsSet, AbstractDeviceSupportsStatus, StatusDataType
 
 
@@ -42,6 +43,7 @@ class DeviceInterface02(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         data_0 = b"\x01"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
+        logger.info(f"Switch on command sent to the device {self.dev_id}")
 
     async def switch_off(self) -> None:  # TODO: Testing required
         """
@@ -52,6 +54,7 @@ class DeviceInterface02(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         data_0 = b"\x02"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
+        logger.info(f"Switch off command sent to the device {self.dev_id}")
 
     async def impulse(self) -> None:  # TODO: Testing required
         """
@@ -62,6 +65,7 @@ class DeviceInterface02(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         data_0 = b"\x03"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
+        logger.info(f"Impulse command sent to the device {self.dev_id}")
 
     async def ramp_down(self) -> None:  # TODO: Testing required
         """
@@ -82,6 +86,7 @@ class DeviceInterface02(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         data_0 = b"\x05"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
+        logger.info(f"Ramp up command sent to the device {self.dev_id}")
 
     async def test_communication(self) -> None:  # TODO: Testing required
         """
@@ -92,6 +97,7 @@ class DeviceInterface02(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         data_0 = b"\x08"
         payload = bytearray(data_0)
         await self._publish_to_set_topic(payload)
+        logger.info(f"Test communication command sent to the device {self.dev_id}")
 
     async def set_ramp_down_time_seconds(self, ramp_duration_seconds: int) -> None:  # TODO: Testing required
         """
@@ -108,6 +114,7 @@ class DeviceInterface02(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         payload.extend(bytearray(raw_ramp_time))
         assert len(payload) == 3
         await self._publish_to_set_topic(payload)
+        logger.info(f"Ramp down time set to {ramp_duration_seconds}s on the device {self.dev_id}")
 
     async def set_ramp_up_time_seconds(self, ramp_duration_seconds: int) -> None:  # TODO: Testing required
         """
@@ -124,3 +131,4 @@ class DeviceInterface02(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         payload.extend(bytearray(raw_ramp_time))
         assert len(payload) == 3
         await self._publish_to_set_topic(payload)
+        logger.info(f"Ramp up time set to {ramp_duration_seconds}s on the device {self.dev_id}")

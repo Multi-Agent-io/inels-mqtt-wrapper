@@ -1,5 +1,6 @@
 from typing import Literal
 
+from .._logging import logger
 from ..interface import AbstractDeviceSupportsSet, AbstractDeviceSupportsStatus, StatusDataType
 
 # FIXME: The set methods currently reset some settings while setting the other.
@@ -55,6 +56,7 @@ class DeviceInterface09(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
             ]
         )
         await self._publish_to_set_topic(payload)
+        logger.info(f"eLAN gateway communication interval set to {interval_sec}s on the device {self.dev_id}")
 
     async def set_required_temperature(self, required_temperature_c: float) -> None:  # TODO: Testing required
         """
@@ -74,6 +76,7 @@ class DeviceInterface09(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
             ]
         )
         await self._publish_to_set_topic(payload)
+        logger.info(f"Required temperature set to {required_temperature_c} C on the device {self.dev_id}")
 
     async def set_open_window_parameters(
         self,
@@ -126,3 +129,6 @@ class DeviceInterface09(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
             ]
         )
         await self._publish_to_set_topic(payload)
+        logger.info(
+            f"Open window feature parameters set to: {sensitivity=}; {duration_min=} on the device {self.dev_id}"
+        )
