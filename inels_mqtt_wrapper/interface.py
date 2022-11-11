@@ -185,6 +185,8 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
 class AbstractDeviceSupportsSet(AbstractDeviceInterface):
     """A base class for all the device interfaces supporting communication via the 'set' MQTT topic"""
 
+    set_message_len_bytes: int = 0
+
     async def _publish_to_set_topic(self, payload: bytearray) -> None:
         """
         A method for publishing the provided payload to the device's 'set' MQTT topic.
@@ -193,6 +195,10 @@ class AbstractDeviceSupportsSet(AbstractDeviceInterface):
         :return: None
         """
         client = self._mqtt_client
+
+        if (l := len(payload)) < self.set_message_len_bytes:
+            payload.extend(bytearray(0 for _ in range(self.set_message_len_bytes - l)))
+
         payload_encoded = payload.hex(" ").upper()
         await client.publish(
             topic=self._set_topic_name,
