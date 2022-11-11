@@ -84,8 +84,7 @@ class AbstractDeviceInterface:
     def _connected_callback(self, data: bytes) -> None:
         data_decoded = data.decode("ascii")
         logger.debug(f"Received a new heartbeat for device {self.dev_id}: {data_decoded}")
-        device_is_connected = data_decoded == "on"
-        self.is_connected = device_is_connected
+        self.is_connected = True
 
     async def _listen_on_connected_topic(self) -> None:
         """
