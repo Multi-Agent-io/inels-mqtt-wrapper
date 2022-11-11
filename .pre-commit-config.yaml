@@ -1,5 +1,5 @@
 default_language_version:
-  python: python3.8
+  python: python3.10
 
 repos:
   - repo: https://github.com/pre-commit/mirrors-isort
@@ -68,8 +68,6 @@ repos:
         name: flake8
         description: Flake8 is a command-line utility for enforcing style consistency across Python projects.
         additional_dependencies:
-          - flake8-pep585
-          - flake8-new-union-types
           - flake8-json
           - flake8-adjustable-complexity
           - flake8-annotations-coverage
