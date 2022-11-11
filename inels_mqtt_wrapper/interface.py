@@ -76,7 +76,7 @@ class AbstractDeviceInterface:
                     break
 
                 payload = message.payload
-                assert isinstance(payload, bytearray), f"MQTT message payload must by a bytearray. Received: {payload}"
+                assert isinstance(payload, bytearray), f"MQTT message payload must be a bytearray. Received: {payload}"
                 callback(payload)
 
     def _connected_callback(self, data: bytearray) -> None:
