@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Callable, Dict, Optional
 
 import asyncio_mqtt as aiomqtt
+from _tasks import background_tasks
 
 from ._logging import logger
 from .exceptions import DeviceStatusUnknownError
@@ -40,7 +41,8 @@ class AbstractDeviceInterface:
 
         self._mqtt_client: aiomqtt.Client = mqtt_client
 
-        asyncio.create_task(self._listen_on_connected_topic())
+        task = asyncio.create_task(self._listen_on_connected_topic())
+        background_tasks.append(task)
 
         logger.debug(f"Initialized Device interface at {id(self)} for device {self.dev_id}")
 
@@ -79,9 +81,10 @@ class AbstractDeviceInterface:
                 payload = message.payload
                 callback(payload)
 
-    def _connected_callback(self, data: str) -> None:
-        logger.debug(f"Received a new heartbeat for device {self.dev_id}: {data}")
-        device_is_connected = data == "on"
+    def _connected_callback(self, data: bytes) -> None:
+        data_decoded = data.decode("ascii")
+        logger.debug(f"Received a new heartbeat for device {self.dev_id}: {data_decoded}")
+        device_is_connected = data_decoded == "on"
         self.is_connected = device_is_connected
 
     async def _listen_on_connected_topic(self) -> None:
@@ -113,7 +116,8 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
         self._last_known_status: Optional[StatusDataType] = None
         self._status_updated_event: asyncio.Event = asyncio.Event()
 
-        asyncio.create_task(self._listen_on_status_topic())
+        task = asyncio.create_task(self._listen_on_status_topic())
+        background_tasks.append(task)
 
     async def await_state_change(self, timeout_sec: int = 10) -> bool:
         """

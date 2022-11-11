@@ -8,6 +8,7 @@ from ._device_interfaces import (
     DeviceInterface19,
 )
 from ._logging import logger
+from ._tasks import background_tasks
 from .concrete_devices import (
     RFATV2,
     RFDAC71B,
@@ -25,6 +26,7 @@ from .exceptions import DeviceDisconnectedError, DeviceStatusUnknownError
 from .interface import AbstractDeviceInterface, AbstractDeviceSupportsSet, AbstractDeviceSupportsStatus
 
 __all__ = (
+    "background_tasks",
     "logger",
     "AbstractDeviceInterface",
     "AbstractDeviceSupportsStatus",
