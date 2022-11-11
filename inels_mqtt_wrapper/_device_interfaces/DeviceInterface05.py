@@ -6,9 +6,10 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     """A base class for all the devices implementing the 'device type 05' interface"""
 
     device_type: str = "05"
+    set_message_len_bytes: int = 3
 
     @staticmethod
-    def _decode_status(raw_status_data: bytearray) -> StatusDataType:  # TODO: Testing required
+    def _decode_status(raw_status_data: bytearray) -> StatusDataType:
         """
         A method for decoding the device's status from bytes.
 
@@ -43,9 +44,9 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         out_real = ramp_time_duration_sec / 0.065
         return int(out_real).to_bytes(length=2, byteorder="big")
 
-    async def set_brightness_percentage(self, brightness_percentage: int) -> None:  # TODO: Testing required
+    async def set_brightness_percentage(self, brightness_percentage: int) -> None:
         """
-        Set the device's desired brightness percentage.
+        Set the device's desired brightness percentage and apply it immediately.
 
         :param brightness_percentage: The desired brightness percentage value.
             Brightness percentage must be an integer between 0 and 100 increased in 10% steps.
@@ -62,9 +63,9 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         await self._publish_to_set_topic(payload)
         logger.info(f"Brightness percentage set to {brightness_percentage}% on the device {self.dev_id}")
 
-    async def ramp_up(self) -> None:  # TODO: Testing required
+    async def ramp_up(self) -> None:
         """
-        Execute the device's 'ramp up' command.
+        Ramp up the brightness gradually from 0 to 100%.
 
         :return: None
         """
@@ -73,9 +74,9 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         await self._publish_to_set_topic(payload)
         logger.info(f"Ramp up command sent to the device {self.dev_id}")
 
-    async def without_function(self) -> None:  # TODO: Testing required
+    async def toggle_switch(self) -> None:
         """
-        Execute the device's 'without function' command.
+        Execute toggle switch: if current brightness is 100% then set it to 0% and vice versa.
 
         :return: None
         """
@@ -84,9 +85,9 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         await self._publish_to_set_topic(payload)
         logger.info(f"Without function command sent to the device {self.dev_id}")
 
-    async def set_ramp_up_time_seconds(self, ramp_duration_seconds: int) -> None:  # TODO: Testing required
+    async def set_ramp_up_time_seconds(self, ramp_duration_seconds: int) -> None:
         """
-        Set the device's desired ramp up time.
+        Set the device's desired ramp up duration.
 
         :param ramp_duration_seconds: The desired duration of the ramp up in seconds.
         :return: None
@@ -100,9 +101,9 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         await self._publish_to_set_topic(payload)
         logger.info(f"Ramp up time set to {ramp_duration_seconds}s on the device {self.dev_id}")
 
-    async def set_ramp_down_time_seconds(self, ramp_duration_seconds: int) -> None:  # TODO: Testing required
+    async def set_ramp_down_time_seconds(self, ramp_duration_seconds: int) -> None:
         """
-        Set the device's desired ramp down time.
+        Set the device's desired ramp down duration.
 
         :param ramp_duration_seconds: The desired duration of the ramp down in seconds.
         :return: None
@@ -116,9 +117,9 @@ class DeviceInterface05(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         await self._publish_to_set_topic(payload)
         logger.info(f"Ramp down time set to {ramp_duration_seconds}s on the device {self.dev_id}")
 
-    async def test_communication(self) -> None:  # TODO: Testing required
+    async def test_communication(self) -> None:
         """
-        Execute the device's 'test communication' command.
+        Make the device send a heartbeat to the 'connected' MQTT topic
 
         :return: None
         """
