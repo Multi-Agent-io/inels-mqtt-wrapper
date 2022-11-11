@@ -2,7 +2,7 @@ import asyncio
 import contextlib
 import re
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional
+from typing import Any, Callable, Dict, Optional
 
 import asyncio_mqtt as aiomqtt
 
@@ -43,6 +43,49 @@ class AbstractDeviceInterface:
 
         asyncio.create_task(self._listen_on_connected_topic())
 
+        logger.debug(f"Initialized Device interface at {id(self)} for device {self.dev_id}")
+
+    @property
+    def dev_id(self) -> str:
+        return f"{self.device_type}:{self.device_address}"
+
+    async def _listen_on_topic(self, topic_name: str, callback: Callable[[bytearray], None]) -> None:
+        """
+        A task for subscribing to a given MQTT topic
+        and feeding the received data to the callback function
+
+        :param topic_name: The name of the topic to subscribe to
+        :param callback: Sync function to execute when a message is received
+        :return: None
+        """
+        client = self._mqtt_client
+        async with client.filtered_messages(topic_name) as messages:
+            logger.debug(f"Attempting subscribing to the topic {topic_name}")
+
+            try:
+                await client.subscribe(topic_name)
+            except Exception as e:
+                logger.error(str(e))
+                raise e
+
+            logger.info(f"Started listening on the {topic_name} topic of the device {self.dev_id}")
+
+            while True:
+                try:
+                    message = await messages.__anext__()
+                except asyncio.CancelledError:
+                    logger.warning(f"Task cancelled. Stopped listening on topic {topic_name}")
+                    break
+
+                payload = message.payload
+                assert isinstance(payload, bytearray), f"MQTT message payload must by a bytearray. Received: {payload}"
+                callback(payload)
+
+    def _connected_callback(self, data: bytearray) -> None:
+        logger.debug(f"Received a new heartbeat for device {self.dev_id}: {data}")
+        device_is_connected = bool(data[0])
+        self.is_connected = device_is_connected
+
     async def _listen_on_connected_topic(self) -> None:
         """
         A task for subscribing to the device's 'connected' MQTT topic
@@ -50,13 +93,10 @@ class AbstractDeviceInterface:
 
         :return: None
         """
-        client = self._mqtt_client
-
-        async with client.filtered_messages(self._connected_topic_name) as messages:
-            await client.subscribe(self._connected_topic_name)
-            async for message in messages:
-                device_is_connected = bool(message.payload)
-                self.is_connected = device_is_connected
+        await self._listen_on_topic(
+            topic_name=self._connected_topic_name,
+            callback=self._connected_callback,
+        )
 
 
 StatusDataType = Dict[str, Any]
@@ -111,6 +151,14 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
             raise DeviceStatusUnknownError(f"Unknown device status for device {self.__class__.__name__}")
         return self._last_known_status
 
+    def _status_callback(self, raw_status_data: bytearray) -> None:
+        logger.debug(f"Status message {raw_status_data} received from device {self.dev_id}")
+        decoded_status = self._decode_status(raw_status_data)
+        logger.debug(f"Status message {raw_status_data} decoded as {decoded_status}")
+        self._last_known_status = decoded_status
+        logger.debug(f"State of the device {self.dev_id} has changed")
+        self._status_updated_event.set()
+
     async def _listen_on_status_topic(self) -> None:
         """
         A task for subscribing to the device's 'status' MQTT topic
@@ -118,15 +166,10 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
 
         :return: None
         """
-        client = self._mqtt_client
-
-        async with client.filtered_messages(self._status_topic_name) as messages:
-            await client.subscribe(self._status_topic_name)
-            async for message in messages:
-                raw_status_data: bytearray = message.payload
-                decoded_status = self._decode_status(raw_status_data)
-                self._last_known_status = decoded_status
-                self._status_updated_event.set()
+        await self._listen_on_topic(
+            topic_name=self._status_topic_name,
+            callback=self._status_callback,
+        )
 
     @staticmethod
     @abstractmethod
