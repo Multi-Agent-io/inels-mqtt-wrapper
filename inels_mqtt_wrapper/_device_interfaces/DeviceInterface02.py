@@ -6,6 +6,7 @@ class DeviceInterface02(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     """A base class for all the devices implementing the 'device type 02' interface"""
 
     device_type: str = "02"
+    set_message_len_bytes: int = 3
 
     @staticmethod
     def _decode_status(raw_status_data: bytearray) -> StatusDataType:  # TODO: Testing required
@@ -90,7 +91,7 @@ class DeviceInterface02(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
 
     async def test_communication(self) -> None:  # TODO: Testing required
         """
-        Execute the device's 'test communication' command.
+        Make the device send a heartbeat to the 'connected' MQTT topic
 
         :return: None
         """

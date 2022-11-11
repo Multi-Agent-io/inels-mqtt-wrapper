@@ -89,7 +89,7 @@ async def main() -> None:
             print(e)  # Print the error if the device status is unknown
 
         await device.set_brightness_percentage(50)  # Set the device's brightness to 50%
-        await device.without_function()  # Apply the before set brightness percentage
+        await device.toggle_switch()  # Apply the before set brightness percentage
 
         try:
             print(device.status)  # Check the device status again
