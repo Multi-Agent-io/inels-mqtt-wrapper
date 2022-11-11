@@ -31,6 +31,7 @@ class AbstractDeviceInterface:
         self.mac_address: str = mac_address
         self.device_address: str = device_address
 
+        mac_address = mac_address.replace(":", "")
         self._status_topic_name: str = f"inels/status/{mac_address}/{self.device_type}/{device_address}"
         self._set_topic_name: str = f"inels/set/{mac_address}/{self.device_type}/{device_address}"
         self._connected_topic_name: str = f"inels/connected/{mac_address}/{self.device_type}/{device_address}"
@@ -47,7 +48,7 @@ class AbstractDeviceInterface:
     def dev_id(self) -> str:
         return f"{self.device_type}:{self.device_address}"
 
-    async def _listen_on_topic(self, topic_name: str, callback: Callable[[bytearray], None]) -> None:
+    async def _listen_on_topic(self, topic_name: str, callback: Callable[[Any], None]) -> None:
         """
         A task for subscribing to a given MQTT topic
         and feeding the received data to the callback function
@@ -76,12 +77,11 @@ class AbstractDeviceInterface:
                     break
 
                 payload = message.payload
-                assert isinstance(payload, bytearray), f"MQTT message payload must be a bytearray. Received: {payload}"
                 callback(payload)
 
-    def _connected_callback(self, data: bytearray) -> None:
+    def _connected_callback(self, data: str) -> None:
         logger.debug(f"Received a new heartbeat for device {self.dev_id}: {data}")
-        device_is_connected = bool(data[0])
+        device_is_connected = data == "on"
         self.is_connected = device_is_connected
 
     async def _listen_on_connected_topic(self) -> None:
@@ -149,9 +149,10 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
             raise DeviceStatusUnknownError(f"Unknown device status for device {self.__class__.__name__}")
         return self._last_known_status
 
-    def _status_callback(self, raw_status_data: bytearray) -> None:
+    def _status_callback(self, raw_status_data: str) -> None:
         logger.debug(f"Status message {raw_status_data} received from device {self.dev_id}")
-        decoded_status = self._decode_status(raw_status_data)
+        status_data = [int(byte, 16) for byte in raw_status_data.split()]
+        decoded_status = self._decode_status(bytearray(status_data))
         logger.debug(f"Status message {raw_status_data} decoded as {decoded_status}")
         self._last_known_status = decoded_status
         logger.debug(f"State of the device {self.dev_id} has changed")
@@ -192,8 +193,9 @@ class AbstractDeviceSupportsSet(AbstractDeviceInterface):
         :return: None
         """
         client = self._mqtt_client
+        payload_encoded = payload.hex(" ").upper()
         await client.publish(
             topic=self._set_topic_name,
-            payload=payload,
+            payload=payload_encoded,
         )
-        logger.debug(f"Payload {payload} published to the MQTT topic {self._set_topic_name}")
+        logger.debug(f"Payload '{payload_encoded}' published to the MQTT topic {self._set_topic_name}")
