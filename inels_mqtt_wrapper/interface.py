@@ -153,11 +153,12 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
             raise DeviceStatusUnknownError(f"Unknown device status for device {self.__class__.__name__}")
         return self._last_known_status
 
-    def _status_callback(self, raw_status_data: str) -> None:
-        logger.debug(f"Status message {raw_status_data} received from device {self.dev_id}")
+    def _status_callback(self, raw_status_data: bytes) -> None:
+        message_str_repr = raw_status_data.decode("ascii").replace("\n", " ").strip()
+        logger.debug(f"Status message '{message_str_repr}' received from device {self.dev_id}")
         status_data = [int(byte, 16) for byte in raw_status_data.split()]
         decoded_status = self._decode_status(bytearray(status_data))
-        logger.debug(f"Status message {raw_status_data} decoded as {decoded_status}")
+        logger.debug(f"Status message '{message_str_repr}' decoded as {decoded_status}")
         self._last_known_status = decoded_status
         logger.debug(f"State of the device {self.dev_id} has changed")
         self._status_updated_event.set()
