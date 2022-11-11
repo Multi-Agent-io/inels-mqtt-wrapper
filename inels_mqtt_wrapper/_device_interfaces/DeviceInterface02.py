@@ -31,7 +31,7 @@ class DeviceInterface02(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
         """
         # TODO: Implementation. Encoding algorithm unknown: specification missing the description.
         assert 0 < ramp_time_duration_sec <= 60 * 60, "The delay time must not exceed 60 minutes."
-        raise NotImplementedError
+        return ramp_time_duration_sec.to_bytes(length=2, byteorder="big")
 
     async def switch_on(self) -> None:  # TODO: Testing required
         """
