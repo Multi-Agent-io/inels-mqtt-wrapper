@@ -18,13 +18,13 @@ class AbstractDeviceInterface:
     device_type: str = "UNDEFINED"
 
     def __init__(self, mac_address: str, device_address: str, mqtt_client: aiomqtt.Client) -> None:
-        mac_address = mac_address.capitalize()
+        mac_address = mac_address.upper()
         mac_address_pattern = r"([A-F0-9]{2}:){5}[A-F0-9]{2}"
         assert re.fullmatch(
             mac_address_pattern, mac_address
         ), f"Invalid MAC address: {mac_address}. Valid pattern: {mac_address_pattern}"
 
-        device_address = device_address.capitalize()
+        device_address = device_address.upper()
         device_address_pattern = r"[A-F0-9]{6}"
         assert re.fullmatch(
             device_address_pattern, device_address
