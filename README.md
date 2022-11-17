@@ -22,7 +22,7 @@ The users are meant to work with one of the following in their code:
 
 Concrete device classes inherit from the concrete device interface implementations without any changes. Concrete device 
 classes are meant to be a convenient way for a developer to find the needed implementation to work with by the name 
-of the devices model. It might not always be clear which interface (device type) the device implements, so using the 
+of the device's model. It might not always be clear which interface (device type) the device implements, so using the 
 concrete device class is recommended.
 
 > Later in this documentation both device interfaces and concrete devices will be referred to as "device classes" as 
@@ -89,7 +89,8 @@ async def main() -> None:
             print(e)  # Print the error if the device status is unknown
 
         await device.set_brightness_percentage(50)  # Set the device's brightness to 50%
-        await device.toggle_switch()  # Apply the before set brightness percentage
+        await asyncio.sleep(3)  # Wait for 3 seconds
+        await device.toggle_switch()  # Switch off the device
 
         try:
             print(device.status)  # Check the device status again
