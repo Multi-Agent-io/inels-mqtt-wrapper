@@ -1,4 +1,4 @@
-from ..interface import AbstractDeviceSupportsStatus, StatusDataType
+from ..AbstractDeviceSupportsStatus import AbstractDeviceSupportsStatus, StatusDataType
 
 
 class DeviceInterface10(AbstractDeviceSupportsStatus):

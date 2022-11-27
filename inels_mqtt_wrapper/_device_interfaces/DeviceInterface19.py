@@ -1,4 +1,4 @@
-from ..interface import AbstractDeviceSupportsStatus, StatusDataType
+from ..AbstractDeviceSupportsStatus import AbstractDeviceSupportsStatus, StatusDataType
 from ..utils import extract_bits
 
 

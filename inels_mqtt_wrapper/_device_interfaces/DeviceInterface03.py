@@ -1,5 +1,6 @@
 from .._logging import logger
-from ..interface import AbstractDeviceSupportsSet, AbstractDeviceSupportsStatus, StatusDataType
+from ..AbstractDeviceSupportsSet import AbstractDeviceSupportsSet
+from ..AbstractDeviceSupportsStatus import AbstractDeviceSupportsStatus, StatusDataType
 
 
 class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet):

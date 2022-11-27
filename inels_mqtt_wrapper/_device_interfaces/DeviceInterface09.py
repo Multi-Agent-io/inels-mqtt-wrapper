@@ -1,7 +1,8 @@
 from typing import Literal
 
 from .._logging import logger
-from ..interface import AbstractDeviceSupportsSet, AbstractDeviceSupportsStatus, StatusDataType
+from ..AbstractDeviceSupportsSet import AbstractDeviceSupportsSet
+from ..AbstractDeviceSupportsStatus import AbstractDeviceSupportsStatus, StatusDataType
 
 # FIXME: The set methods currently reset some settings while setting the other.
 # For now there is no documented way to obtain the current setting of the
