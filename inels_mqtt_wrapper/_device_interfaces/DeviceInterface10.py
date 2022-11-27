@@ -5,6 +5,7 @@ class DeviceInterface10(AbstractDeviceSupportsStatus):
     """A base class for all the devices implementing the 'device type 10' interface"""
 
     device_type: str = "10"
+    status_message_len_bytes: int = 5
 
     @staticmethod
     def _decode_status(raw_status_data: bytearray) -> StatusDataType:

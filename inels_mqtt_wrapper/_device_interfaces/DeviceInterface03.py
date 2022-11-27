@@ -6,6 +6,7 @@ class DeviceInterface03(AbstractDeviceSupportsStatus, AbstractDeviceSupportsSet)
     """A base class for all the devices implementing the 'device type 03' interface"""
 
     device_type: str = "03"
+    status_message_len_bytes: int = 2
     set_message_len_bytes: int = 3
 
     @staticmethod
