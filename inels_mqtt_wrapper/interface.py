@@ -105,6 +105,8 @@ StatusDataType = Dict[str, Any]
 class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
     """A base class for all the device interfaces supporting communication via the 'status' MQTT topic"""
 
+    status_message_len_bytes: int = 0
+
     def __init__(self, mac_address: str, device_address: str, mqtt_client: aiomqtt.Client) -> None:
         super().__init__(
             mac_address=mac_address,
@@ -155,9 +157,23 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
     def _status_callback(self, raw_status_data: bytes) -> None:
         message_str_repr = raw_status_data.decode("ascii").replace("\n", " ").strip()
         logger.debug(f"Status message '{message_str_repr}' received from device {self.dev_id}")
-        status_data = [int(byte, 16) for byte in raw_status_data.split()]
-        decoded_status = self._decode_status(bytearray(status_data))
+        status_data = bytearray(int(byte, 16) for byte in raw_status_data.split())
+
+        if (l := len(status_data)) != self.status_message_len_bytes:
+            msg = (
+                f"Cannot decode device status. Wrong status message payload size: {l} bytes."
+                f"Expected: {self.status_message_len_bytes} bytes"
+            )
+            logger.error(msg)
+            raise ValueError(msg)
+
+        try:
+            decoded_status = self._decode_status(status_data)
+        except Exception as e:
+            logger.error(f"An error occurred while decoding status message: {e}")
+            raise e
         logger.debug(f"Status message '{message_str_repr}' decoded as {decoded_status}")
+
         self._last_known_status = decoded_status
         logger.debug(f"State of the device {self.dev_id} has changed")
         self._status_updated_event.set()
