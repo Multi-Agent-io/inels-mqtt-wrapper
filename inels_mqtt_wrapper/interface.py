@@ -17,6 +17,11 @@ class AbstractDeviceInterface:
     device_type: str = "UNDEFINED"
 
     def __init__(self, mac_address: str, device_address: str, mqtt_client: aiomqtt.Client) -> None:
+        assert self.device_type != "UNDEFINED", (
+            f"Incomplete interface implementation for class '{self.__class__.__name__}': "
+            "'device_type' class field must be overriden in inheriting class."
+        )
+
         mac_address = mac_address.upper()
         mac_address_pattern = r"([A-F0-9]{2}:){5}[A-F0-9]{2}"
         assert re.fullmatch(
@@ -113,6 +118,10 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
             device_address=device_address,
             mqtt_client=mqtt_client,
         )
+        assert self.status_message_len_bytes != 0, (
+            f"Incomplete interface implementation for class '{self.__class__.__name__}': "
+            "'status_message_len_bytes' class field must be overriden in inheriting class."
+        )
 
         self._last_known_status: Optional[StatusDataType] = None
         self._status_updated_event: asyncio.Event = asyncio.Event()
@@ -161,7 +170,7 @@ class AbstractDeviceSupportsStatus(AbstractDeviceInterface, ABC):
 
         if (l := len(status_data)) != self.status_message_len_bytes:
             msg = (
-                f"Cannot decode device status. Wrong status message payload size: {l} bytes."
+                f"Cannot decode device status. Wrong status message payload size: {l} bytes. "
                 f"Expected: {self.status_message_len_bytes} bytes"
             )
             logger.error(msg)
@@ -214,10 +223,22 @@ class AbstractDeviceSupportsSet(AbstractDeviceInterface):
         :param payload: A bytearray object containing the bytes to be published
         :return: None
         """
-        client = self._mqtt_client
+        assert self.set_message_len_bytes != 0, (
+            f"Incomplete interface implementation for class '{self.__class__.__name__}': "
+            "'set_message_len_bytes' class field must be overriden in inheriting class."
+        )
 
-        if (l := len(payload)) < self.set_message_len_bytes:
-            payload.extend(bytearray(0 for _ in range(self.set_message_len_bytes - l)))
+        client = self._mqtt_client
+        target_len = self.set_message_len_bytes
+
+        if (l := len(payload)) < target_len:
+            payload.extend(bytearray(0 for _ in range(target_len - l)))
+        elif l > target_len:
+            msg = (
+                "Set message payload size exceeds the target length for interface "
+                f"'{self.__class__.__name__}'. Expected {target_len} bytes, got {l} bytes instead."
+            )
+            raise ValueError(msg)
 
         payload_encoded = payload.hex(" ").upper()
         await client.publish(
