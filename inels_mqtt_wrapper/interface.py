@@ -82,7 +82,7 @@ class AbstractDeviceInterface:
                 callback(payload)
 
     def _connected_callback(self, data: bytes) -> None:
-        data_decoded = data.decode("ascii")
+        data_decoded = data.decode("ascii").strip()
         logger.debug(f"Received a new heartbeat for device {self.dev_id}: {data_decoded}")
         self.is_connected = True
 
